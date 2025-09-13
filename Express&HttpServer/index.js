@@ -20,7 +20,7 @@ var user=[{
 // console.log("home page");
 // res.send("response send home page ");
 // })
-
+app.use(express.json());
 
 app.get('/about' , function(req, res){
 const khushiKidneys = user[0].kidneys;
@@ -35,7 +35,7 @@ for(let i=0 ;i< khushiKidneys.length;i++){
 
 const noOfUnhealthyKidneys = noOfKidneys - numberOfHealthyKidney; 
 res.json({
-    khushiKidneys,
+    noOfKidneys,
     numberOfHealthyKidney,
     noOfUnhealthyKidneys
 })
@@ -43,20 +43,35 @@ res.json({
 
 
 app.post('/about' , function(req, res){
-console.log("about page post operation");
-res.send("response send about page post operation  ");
+const isHealthy = req.body.isHealthy;
+user[0].kidneys.push({
+    healthy: isHealthy
+})
+res.json({
+    msg: "DONE!" 
+})
 })
 
 
-app.put('/about' , function(req, res){
-console.log("about page");
-res.send("response send about page  ");
+app.put('/about' , function(req, res){   // doess work good 
+for(let i=0;i<user[0].kidneys.length ;i++){
+    user[0].kidneys[i].healthy = false ;
+}
+ res.json({});// dedo khali koi prblm ni hogi ...even dena hi pdega otherwise , postman never know ki yes request has been ended 
 })
 
-
+//removing all unhealthy kidney 
 app.delete('/about' , function(req, res){
-console.log("about page");
-res.send("response send about page  ");
+ const newKidneys = [];
+ for(let i=0;i<user[0].kidneys.length ;i++){
+   if(user[0].kidneys[i].healthy){
+    newKidneys.push({
+        healthy: true 
+    })
+   }
+}
+user[0].kidneys = newKidneys;
+ res.json({msg: "doneeeee"});// dedo khali koi prblm ni hogi ...even dena hi pdega otherwise , postman never know ki yes request has been ended 
 })
 
  app.listen(3000);
